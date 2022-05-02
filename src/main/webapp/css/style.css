@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Henny+Penny&display=swap');
+
+body{margin:0; padding:0; font-size:13px;font-family: 'Acme', sans-serif; background-color:#FFFFFF;}
+a{outline:none; text-decoration:none;}
+
+/*----------------------------------------------HTML 5 Overrides-------------------------------------*/
+
+article, aside, header, nav, section{display:block; margin:0; padding:0;}
+.block{display:block; width:1100px; margin:0 auto; padding:0; text-align:left;}
+
+/* ----------------------------------------------Header container-------------------------------------*/
+
+#header_container{height: 100px;width:100%;background-color: #114169;margin-bottom: 0px;border-bottom:1px solid #ffffff;}
+#header_container a{color:#ffffff; background-color:#114169;}
+
+/*----------------------------------------------Header-------------------------------------*/
+header{margin: 0px 200px;}
+#title{padding:0px; float:left;}
+#title h1{font-weight:normal; text-transform:uppercase;font-family: 'Henny Penny', cursive; color:#ffffff;font-size:32px;}
+
+header nav{display:block; float:right; margin:20px 0 0 0; padding:20px 0;}
+header nav ul{margin:0; padding:0; list-style:none;}
+header nav li{display:inline; margin-right:50px; text-transform:uppercase;}
+header nav li a{font-size: 20px;}
+header nav li a:hover{color:#FF9900;}
+
+.dropdown {position: relative;  display: inline-block;}
+.dropdown-content {display: none; position: absolute; background-color: #f9f9f9;min-width: 80px; border-radius: 2px; z-index: 1;height:auto;}
+.dropdown:hover .dropdown-content {display: block;}
+
+
+/*------------------------- Create album and image ------------------*/
+#upload_image,#create_album{padding:15px;}
+
+#upload_image h2{text-transform: uppercase;margin:0px;}
+#upload_image input[type="button"]{background-color: #89bae0;padding: 5px 10px;color:#ffffff;margin: 5px; font-family: "Acme";font-size: 15px; border-radius: 5px;text-transform:uppercase; }
+#upload_image input[type="button"]:hover{background-color: #114169;color:#FF9900;}
+#detail_image *{display: block;margin:4px 0px;}
+
+#input_checkbox input{display:inline-flex;}
+#input_checkbox label{display:inline;}
+
+#create_album *{display:block;margin:4px 0px;}
+#create_album h2{text-transform: uppercase;margin:0px;}
+#create_album input[type="button"]{background-color: #89bae0;padding: 5px 10px;color:#ffffff;margin: 5px; font-family: "Acme";font-size: 15px; border-radius: 5px;text-transform:uppercase; }
+#create_album input[type="button"]:hover{background-color: #114169;color:#FF9900;}
+
+
+/* ------------------- Album list ----------------- */
+#albums_containerbody h2 {font-size: 14px;color:#FF9900;margin: 5px 0px;}
+#albums_containerbody td {font-size: 12px;border-bottom:1px solid #DEDEDE;width: 100%;padding: 5px 30px;white-space: nowrap;}
+
+#save_list{background-color: #89bae0;padding: 5px 7px;color:#ffffff; font-family: "Acme";font-size: 12px; border-radius: 5px;text-transform:uppercase;margin-left: 40px;}
+#save_list:hover{background-color: #114169;color:#FF9900;}
+
+.selected{color:#FF9900;}
+.notselected{color:#000000;}
+
+/* -------------------------------------- Wallpaper ----------------------------- */
+
+#wallpaper {display:block; width:100%;height: 350px;background-size: cover;text-align: center;clear: left;margin-top: 0px;position: relative;}
+#wallpaper p{position:absolute; left:0;bottom:0; background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5); font-size: 24px;color: #ffffff;text-transform: uppercase;
+  display: block;width: 100%; padding: 5px;margin-bottom: 0;}
+
+/*----------------------------------------------Content Area-------------------------------------*/
+
+#album_container {padding-bottom: 30px;overflow:auto;margin-bottom: 40px;}
+#album_container section{display:block; width:100%; margin:0 0 30px 0; padding:0;overflow: auto;}
+
+/* ---- Album name ----- */
+
+#album_name {padding:20px 0; border-bottom:1px solid #DEDEDE; text-align:center;}
+#album_name h1{font-size:36px; font-weight:normal; text-transform:uppercase;color:#114169;}
+
+/* ------- Images album ------- */
+
+#album_images{display: grid; grid-gap: 1rem; padding: 1rem; max-width: 1020px; margin: 0 auto; grid-template-columns: repeat(5, 1fr);}
+#album_images *{box-sizing: border-box; display: grid; place-items: center;}
+
+.image_container{position: relative; display: flex; overflow: hidden; width: 100%;
+  float:left; height: 150px; border-radius: 5px;  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;}
+.image_container img{width:100%;height:100%;}
+.image_title{position:absolute; left:0;bottom:0; background: none repeat scroll 0 0 rgba(0, 0, 0, 0.7); font-size: 12px; font-weight: bold;color: #ffffff;text-transform: uppercase;
+  display: block;width: 100%; padding: 5px}
+
+.image_container:hover,.image_container:focus-within { opacity :0.7; }
+
+
+/* --------- Button prev next --------- */
+
+#button_container{height: 50px;}
+#button_container *{display: inline;}
+#button_container button{display: inline;background-color: #ffffff;padding: 5px 15px; font-family: "Acme";font-size:50px; border-radius: 10px;border:1px solid white;color:#89bae0;}
+#button_left{float:left; margin-left: 200px;}
+#button_right {float:right; margin-right: 200px;}
+#button_container button:hover{color:#FF9900;}
+
+/*------------ Selected image Album------------*/
+
+#image_details {margin-top: 40px;padding-top: 20px;border-top: 1px solid #DEDEDE;}
+
+#fullscale_image{margin-left: auto;  margin-right: auto;  display: block; margin-bottom: 20px;}
+
+#image_description h2{color:#114169;text-transform: uppercase;}
+#image_description h3{border-bottom:1px solid #DEDEDE;padding-bottom: 30px;margin-bottom: 30px;text-transform: uppercase;color: black;font-size: 18px;}
+#image_description p{color:#4a4a4a;font-size: 12px;text-transform: uppercase;}
+
+/* ------------------ Comment--------------------------*/
+
+#comment_container{float:left; width:800px; }
+#comment_container h2{text-transform: uppercase; }
+#comment_container article h2{font-size:16px; margin-bottom:15px;text-transform: uppercase;}
+#comment_container article p{margin:0; padding:0;font-size:16px;}
+
+/* ------- Create comment ----------*/
+
+#right_column{float:right; width:280px;}
+
+#new_comment{padding:15px;border: 2px solid rgba(0,0,0,0.1);border-radius: 5px;}
+#new_comment *{display:block;margin:4px 0px;}
+#new_comment h2{text-transform: uppercase;float: left;}
+#new_comment textarea { resize: none; }
+#new_comment input[type="button"]{background-color: #89bae0;padding: 5px 10px;color:#ffffff;margin: 5px; font-family: "Acme";font-size: 15px; border-radius: 5px;text-transform:uppercase;}
+#new_comment input[type="button"]:hover{background-color: #114169;color:#FF9900;}
+
+/*----------------------------------------------Footer-------------------------------------*/
+
+#footer_container{border-top:1px solid #DEDEDE;width:100%;background-color: #89bae0;height: 60px;}
+
+footer p{margin-bottom: 15px; padding:0;text-align:center;color: #ffffff;margin-top: 15px;font-size:18px;text-transform:uppercase;}
+
+.alert{visibility:hidden;}

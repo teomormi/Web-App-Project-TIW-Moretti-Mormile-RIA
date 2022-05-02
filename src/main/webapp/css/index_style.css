@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Kaushan+Script&display=swap');
+
+*{ padding: 0; margin: 0; box-sizing: border-box;}
+
+
+.container{ height: auto; background-color: rgba(255,255,255,0.1); border-radius: 10px;
+  border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 0 8px rgba(17,65,105,0.4); padding: 30px 35px;}
+
+.container *{ font-family: 'Acme', sans-serif; color: #111111; letter-spacing: 0.5px; outline: none; border: none;}
+
+.left{ width: 400px; position: absolute; transform: translate(-50%,-50%); top: 50%; left: 30%; }
+.right{ position: absolute; transform: translate(-50%,-50%); top: 50%; left: 65%;  width: 450px; }
+
+
+.container h3{ font-size: 32px; font-weight: 500; line-height: 42px; text-align: center;color:#114169;}
+
+.container label{
+  color:#114169;
+display: block;
+margin-top: 30px;
+font-size: 16px;
+font-weight: 500;
+}
+
+.container input{
+display: block;
+height: 50px;
+width: 100%;
+background-color: rgba(255,255,255,0.1);
+border-radius: 3px;
+border: 1px solid rgba(0,0,0,1);
+padding: 0 10px;
+margin-top: 8px;
+font-size: 14px;
+font-weight: 300;
+}
+
+::placeholder{
+color: #505050;
+}
+
+.container input[type=button]{
+margin-top: 50px;
+width: 100%;
+background-color: #89bae0;
+color: #ffffff;
+padding: 15px 0;
+font-size: 18px;
+font-weight: 600;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.container input[type=button]:hover{
+background-color: #114169;color:#FF9900;
+}

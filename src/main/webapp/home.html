@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <title>Moretti Mormile</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <script src="js/utils.js" charset="utf-8" defer></script>
+  <script src="js/home.js" charset="utf-8" defer></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+</head>
+<body>
+  <!-- alert -->
+  <div class="alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">X</span>
+    <p id="alert">Danger! Indicates a dangerous or potentially negative action.</p>
+  </div>
+  <!-- da imcorporare in style.css-->
+  <style>
+  .alert {
+  position: absolute;
+  width: 100%;
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+  z-index: 1;
+}
+
+.closebtn {
+  margin-right: 5%;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.closebtn:hover {
+  color: black;
+}
+  </style>
+  <!-- header menu -->
+  <div id="header_container" class="block">
+    <header>
+      <div id="title">
+        <h1>Galleria   immagini</h1>
+      </div>
+      <nav>
+        <ul>
+          <li class="dropdown"><a>Albums</a>
+            <div class="dropdown-content">
+            <table id="albums_container"  >
+          		<tbody id="albums_containerbody" >
+                <tr><td><h2>OTHER ALBUMS</h2></td></tr>
+                <tr> <td>Lago di Garda</td></tr>
+          			<tr> <td>Lago di Chiusi</td></tr>
+          			<tr> <td>Lago Maggiore</td></tr>
+                <tr><td><h2>YOUR ALBUMS</h2></td></tr>
+          			<tr class="draggable"> <td>Lago di Como</td></tr>
+          			<tr class="draggable"> <td>Lago di Varese</td></tr>
+          			<tr class="draggable"> <td>Lago d'Iseo</td></tr>
+          			<tr class="draggable"> <td>Lago di Pusiano</td></tr>
+          		</tbody>
+          	</table>
+            <button id="save_list">Save order</button>
+          </div>
+          </li>
+          <li class="dropdown"><a>Create Album</a>
+            <div class="dropdown-content" id="create_album">
+            <form action="#" >
+            	<label for="title">Title</label>
+            	<input type="text" name="title">
+              <input type="button" value="Crea Album" id="button_createalbum">
+            </form>
+          </div>
+          </li>
+          <li class="dropdown"><a>Add Image</a>
+            <div id="upload_image" class="dropdown-content" >
+  	          <form action="#" enctype="multipart/form-data">
+  	          	<div id="detail_image">
+  		          	<label for="title">Title</label>
+  		            <input type="text" name="title" />
+  		            <label for="description">Description</label>
+  		            <input type="text" name="description" />
+  		            <label for="file">File</label>
+  		            <input type="file" name="file" />
+  	            </div>
+  	            <p>SCEGLI ALBUM DOVE SALVARE</p>
+  	            <div id="minealbums_checkbox">
+                  <!-- inizializzare tramite js -->
+  	            	<input type="checkbox" name="albums">
+  	            	<label> Album 1</label></br>
+                  <input type="checkbox" name="albums">
+  	            	<label> Album 2</label>
+  				      </div>
+  				      <input type="button" value="Salva Immagine" id="button_uploadimage">
+  	          </form>
+          	</div>
+          </li>
+          <li id="button_logout"><a>Logout</a></li>
+        </ul>
+      </nav>
+    </header>
+      <!-- / header menu -->
+  </div>
+
+    <!-- Wallpaper -->
+    <div id="wallpaper" style="background-image: url('images/lago-de-como.jpg');">
+       <p id="user_name">Ciao Paperino!</p>
+    </div>
+
+
+    <!-- content -->
+    <div id="album_container" class="block" >
+        <section id="album_name">
+          <h1>Nome Album</h1>
+        </section>
+        <section>
+          <div id="album_images">
+            <div class="image_container">
+                  <img src="images/lago-de-como.jpg"/>
+                  <h2 class="image_title">Mountain View</h2>
+            </div>
+          <div class="image_container">
+                  <img src="images/lago-de-como.jpg"/>
+                  <h2 class="image_title">Mountain View</h2>
+          </div>
+          <div class="image_container">
+                  <img src="images/lago-de-como.jpg"/>
+                  <h2 class="image_title">Mountain View</h2>
+          </div>
+          <div class="image_container">
+                  <img src="images/lago-de-como.jpg"/>
+                  <h2 class="image_title">Mountain View</h2>
+          </div>
+          <div class="image_container">
+                  <img src="images/lago-de-como.jpg"/>
+                  <h2 class="image_title">Mountain View</h2>
+          </div>
+         </div>
+        </section>
+
+        <div id="button_container">
+          <a id="button_left" href="#"><button>«</button></a>
+          <a id="button_right" href="#"><button>»</button></a>
+        </div>
+
+
+        <div id="image_details">
+          <!-- here the full scale image -->
+          
+          <div id="image_description">
+          	<img id="fullscale_image" src="images/lago-de-como.jpg" />
+            <p >2022/01/01 19:05:58</p>
+            <h2>Lago di Como</h2>
+            <h3>Descrizione dell'immagine</h3>
+          </div>
+          <!-- container comments -->
+
+          <div id="comment_container">
+            <h2>Commenti</h2>
+            <article>
+                <h2>Matteo</h2>
+                <p>Immagine fantastica!</p>
+            </article>
+            <article>
+                <h2>Lorenzo</h2>
+                <p>Immagine fantastica!</p>
+            </article>
+          </div>
+
+         <!-- right column -->
+          <aside id="right_column">
+            <div id="new_comment">
+            <h2>Crea nuovo commento</h2>
+            <form action="#">
+              <textarea name="text" rows="4" cols="30"></textarea>
+              <input type="hidden" name="image" />
+              <!-- <input type="hidden" name="album" />-->
+              <input type="button" id="button_comment" value="Invia">
+            </form>
+            </div>
+
+
+          </aside>
+
+        </div>
+        <!-- / content body -->
+    </div>
+
+
+    <!-- footer -->
+    <div id="footer_container" class="block">
+      <footer>
+        <p>Copyright &copy; 2022 - All Rights Reserved - Moretti Lorenzo / Mormile Matteo</p>
+      </footer>
+    </div>
+    </body>
+</html>

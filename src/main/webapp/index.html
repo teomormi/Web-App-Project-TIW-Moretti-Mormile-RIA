@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+    <title>Gallery Login</title>
+    <link rel="stylesheet" href="css/index_style.css">
+    <script src="js/utils.js" charset="utf-8" defer></script>
+    <script src="js/login.js" charset="utf-8" defer></script>
+</head>
+<body>
+  <div class="container left">
+        <h3>Login</h3>
+        <form action="#" method="post">
+        <label for="username">Username</label>
+        <input type="text" placeholder="Username" name="username" required>
+
+        <label for="password">Password</label>
+        <input type="password" placeholder="Password" name="password" required>
+		<input type="button" id="buttonlogin" value="Log In">
+		<p id="errormessage"></p>
+        </form>
+        
+  </div>
+
+  <div class="container right ">
+          <h3>Sign Up</h3>
+          <form action="CreateUser" method="post">
+          <label for="username">Username</label>
+          <input type="text" placeholder="Username" name="username" required>
+
+          <label for="email">Email</label>
+          <input type="text" placeholder="Email" name="email" required>
+
+          <label for="password">Password</label>
+          <input type="password" placeholder="Password" name="password" required>
+
+          <label for="password">Confirm Password</label>
+          <input type="password" placeholder="Password" name="passconfirm" required>
+
+          <input type="button" id="buttonsign"value="Sign Up">
+          <p id="errorsignup"></p>
+          </form>
+  </div>
+</body>
+</html>

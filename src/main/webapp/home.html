@@ -18,7 +18,6 @@
   <style>
   .alert {
   position: absolute;
-  width: 100%;
   padding: 20px;
   background-color: #f44336;
   color: white;
@@ -43,7 +42,7 @@
   <div id="header_container" class="block">
     <header>
       <div id="title">
-        <h1>Galleria   immagini</h1>
+        <h1>Galleria immagini</h1>
       </div>
       <nav>
         <ul>
@@ -88,7 +87,7 @@
   	            <p>SCEGLI ALBUM DOVE SALVARE</p>
   	            <div id="minealbums_checkbox">
                   <!-- inizializzare tramite js -->
-  	            	<input type="checkbox" name="albums">
+  	              <input type="checkbox" name="albums">
   	            	<label> Album 1</label></br>
                   <input type="checkbox" name="albums">
   	            	<label> Album 2</label>
@@ -97,7 +96,7 @@
   	          </form>
           	</div>
           </li>
-          <li id="button_logout"><a>Logout</a></li>
+          <li><a id="button_logout">Logout</a></li>
         </ul>
       </nav>
     </header>
@@ -173,15 +172,12 @@
           <aside id="right_column">
             <div id="new_comment">
             <h2>Crea nuovo commento</h2>
-            <form action="#">
-              <textarea name="text" rows="4" cols="30"></textarea>
-              <input type="hidden" name="image" />
-              <!-- <input type="hidden" name="album" />-->
-              <input type="button" id="button_comment" value="Invia">
-            </form>
+            <form action="#" method="post">
+					<textarea name="text" rows="4" cols="30" placeholder="Your comment..." required></textarea>
+              		<input type="hidden" name="image">
+              		<input type="button" id="button_comment" value="Save" name="Save comment">
+			</form>
             </div>
-
-
           </aside>
 
         </div>

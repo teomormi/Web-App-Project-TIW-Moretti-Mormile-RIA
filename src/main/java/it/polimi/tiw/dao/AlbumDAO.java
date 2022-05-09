@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import it.polimi.tiw.beans.Album;
@@ -54,8 +55,7 @@ public class AlbumDAO {
 	}
 	
 	public ArrayList<Album> getAlbumsByUserID(int id) throws SQLException{
-		String query = "SELECT * FROM album WHERE user = ? ORDER BY date DESC";
-		// String query = "select * FROM album order by case when sorting is null then 1 else 0 end, sorting,id"
+		String query = "SELECT * FROM album WHERE user = ? order by case when sorting is null then 1 else 0 end, sorting,id";
 		ArrayList<Album> albums = new ArrayList<Album>(); 
 		try(PreparedStatement pstatement = connection.prepareStatement(query)) {
 			pstatement.setInt(1, id);
@@ -73,17 +73,29 @@ public class AlbumDAO {
 		return albums;
 	}
 	
-	public void createAlbum(String title, int idUser) throws SQLException, BadAlbumException {
+	public int createAlbum(String title, int idUser) throws SQLException, BadAlbumException {
 		if(title == null || title.equals(""))
 			throw new BadAlbumException("Not valid title");
-		String query = "INSERT into album (title, user) VALUES (?, ?)";
-		try(PreparedStatement pstatement = connection.prepareStatement(query)) {
+		String query = "INSERT INTO album (title,user) VALUES (?,?)";
+		try (PreparedStatement pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			pstatement.setString(1, title);
 			pstatement.setInt(2, idUser);
 			pstatement.executeUpdate();
-		} catch (SQLException e) {
-			connection.rollback();
-			throw e;
+			ResultSet generatedKeys = pstatement.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				return generatedKeys.getInt(1);
+			} else {
+				throw new SQLException("Creating album failed, no ID obtained.");
+			}
+		}
+	}
+	
+	public void saveOrder(int albumId,int sorting) throws SQLException {
+		String query = "UPDATE album SET sorting = ? WHERE id = ?";
+		try (PreparedStatement pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
+			pstatement.setInt(1, sorting);
+			pstatement.setInt(2, albumId);
+			pstatement.executeUpdate();
 		}
 	}
 	

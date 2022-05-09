@@ -12,6 +12,7 @@ article, aside, header, nav, section{display:block; margin:0; padding:0;}
 
 #header_container{height: 100px;width:100%;background-color: #114169;margin-bottom: 0px;border-bottom:1px solid #ffffff;}
 #header_container a{color:#ffffff; background-color:#114169;}
+#header_container a:hover{color:#FF9900;}
 
 /*----------------------------------------------Header-------------------------------------*/
 header{margin: 0px 200px;}
@@ -20,9 +21,9 @@ header{margin: 0px 200px;}
 
 header nav{display:block; float:right; margin:20px 0 0 0; padding:20px 0;}
 header nav ul{margin:0; padding:0; list-style:none;}
-header nav li{display:inline; margin-right:50px; text-transform:uppercase;}
-header nav li a{font-size: 20px;}
-header nav li a:hover{color:#FF9900;}
+header nav ul li{display:inline; margin-right:50px; text-transform:uppercase;}
+header nav ul li a{font-size: 20px;}
+
 
 .dropdown {position: relative;  display: inline-block;}
 .dropdown-content {display: none; position: absolute; background-color: #f9f9f9;min-width: 80px; border-radius: 2px; z-index: 1;height:auto;}
@@ -49,6 +50,7 @@ header nav li a:hover{color:#FF9900;}
 /* ------------------- Album list ----------------- */
 #albums_containerbody h2 {font-size: 14px;color:#FF9900;margin: 5px 0px;}
 #albums_containerbody td {font-size: 12px;border-bottom:1px solid #DEDEDE;width: 100%;padding: 5px 30px;white-space: nowrap;}
+tr.album:hover{background-color:#d9d9d9;}
 
 #save_list{background-color: #89bae0;padding: 5px 7px;color:#ffffff; font-family: "Acme";font-size: 12px; border-radius: 5px;text-transform:uppercase;margin-left: 40px;}
 #save_list:hover{background-color: #114169;color:#FF9900;}
@@ -60,7 +62,7 @@ header nav li a:hover{color:#FF9900;}
 
 #wallpaper {display:block; width:100%;height: 350px;background-size: cover;text-align: center;clear: left;margin-top: 0px;position: relative;}
 #wallpaper p{position:absolute; left:0;bottom:0; background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5); font-size: 24px;color: #ffffff;text-transform: uppercase;
-  display: block;width: 100%; padding: 5px;margin-bottom: 0;}
+  display: block;width: 100%; padding: 5px 0px;margin-bottom: 0;}
 
 /*----------------------------------------------Content Area-------------------------------------*/
 
@@ -129,4 +131,4 @@ header nav li a:hover{color:#FF9900;}
 
 footer p{margin-bottom: 15px; padding:0;text-align:center;color: #ffffff;margin-top: 15px;font-size:18px;text-transform:uppercase;}
 
-.alert{visibility:hidden;}
+.alert{visibility:hidden;width:auto;}

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,13 +15,13 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.User;
-import it.polimi.tiw.dao.AlbumImagesDAO;
 import it.polimi.tiw.dao.CommentDAO;
 import it.polimi.tiw.dao.ImageDAO;
 import it.polimi.tiw.exceptions.BadCommentException;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/CreateComment")
+@MultipartConfig
 public class CreateComment extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
@@ -41,43 +42,39 @@ public class CreateComment extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
 		Integer imageId = null;
-		Integer albumId = null;
 		Integer usrID = null;
 		String text = null;
 		
 		User usr = (User) session.getAttribute("user");	
 		usrID = usr.getId();
 		
+		/* Extracts parameters from POST */
+		
 		try {
-			imageId = Integer.parseInt(request.getParameter("image")); 
-			albumId = Integer.parseInt(request.getParameter("album"));
+			imageId = Integer.parseInt(request.getParameter("image"));
 			text = StringEscapeUtils.escapeJava(request.getParameter("text"));
-			
-			if(text.equals("") || text==null) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Your comment cannot be empty");
+			/* Text parameter cannot be empty */
+			if(text == null || text.equals("")) {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Your comment cannot be empty");
 				return;
 			}
-		}
-		catch (NumberFormatException | NullPointerException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
+		} catch (NumberFormatException | NullPointerException e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Incorrect or missing param values");
 			return;
-		}
+		}	
 			
 		ImageDAO iDao = new ImageDAO(connection);
 		Image img;
-		AlbumImagesDAO IaDao = new AlbumImagesDAO(connection);
 		CommentDAO cDao = new CommentDAO(connection);
 		
 		try {
 			img = iDao.getImageByID(imageId);
 			if(img == null) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image not found");
-				return;
-			}
-			if(!IaDao.checkImageInAlbum(imageId, albumId)) {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Mismatching value from album and image, cannot return to album page");
 				return;
 			}
 			cDao.createComment(imageId, text , usrID);
@@ -89,10 +86,8 @@ public class CreateComment extends HttpServlet{
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
 			return;
 		}
-		// OPPURE associare commento a id della tabella albumimages -> da li ho poi imageid e albumid
 		
-		response.sendRedirect(getServletContext().getContextPath() + "/Album?album=" + albumId + "&image=" + imageId);
-		
+		response.setStatus(HttpServletResponse.SC_OK);		
 	}
 
 }

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Arrays;
 import java.lang.String;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.dao.AlbumDAO;
 
 
 @WebServlet("/SaveAlbumsOrder")
@@ -41,14 +43,30 @@ public class SaveAlbumsOrder extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
 			return;
 		}
-
-
-		for (String s : checkedIds) {
-			Integer id = Integer.parseInt(s);
-			System.out.println(id);
-			// funziona, bisogna aggiornare repo
-		}
-		response.setStatus(HttpServletResponse.SC_OK);
+		
+		AlbumDAO aDao = new AlbumDAO(connection);
+		Integer sorting = 1;
+		Integer albumId;
+		
+		try{
+			connection.setAutoCommit(false);
+			
+			for (String s : checkedIds)  {
+				albumId = Integer.parseInt(s);
+				aDao.saveOrder(albumId, sorting);
+				sorting++;
+			}
+			connection.commit();
+			response.setStatus(HttpServletResponse.SC_OK);
+			
+		} catch (Exception e) {
+			try {
+					connection.rollback();
+			} catch (SQLException errorSQL) { errorSQL.printStackTrace();}
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while saving order");
+		}		
+		
 	}
 	
 	public void destroy() {

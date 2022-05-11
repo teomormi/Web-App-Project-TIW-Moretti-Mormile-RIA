@@ -29,6 +29,10 @@ header nav ul li a{font-size: 20px;}
 .dropdown-content {display: none; position: absolute; background-color: #f9f9f9;min-width: 80px; border-radius: 2px; z-index: 1;height:auto;}
 .dropdown:hover .dropdown-content {display: block;}
 
+.alert{visibility:hidden;width:auto;position: absolute;  padding: 20px;  background-color: #f44336;  color: white;  z-index: 1;}
+.closebtn {  margin-right: 5%; color: white; font-weight: bold; float: right; font-size: 14px; line-height: 20px; cursor: pointer;}
+.closebtn:hover {  color: black;}
+
 
 /*------------------------- Create album and image ------------------*/
 #upload_image,#create_album{padding:15px;}
@@ -130,5 +134,3 @@ tr.album:hover{background-color:#d9d9d9;}
 #footer_container{border-top:1px solid #DEDEDE;width:100%;background-color: #89bae0;height: 60px;}
 
 footer p{margin-bottom: 15px; padding:0;text-align:center;color: #ffffff;margin-top: 15px;font-size:18px;text-transform:uppercase;}
-
-.alert{visibility:hidden;width:auto;}

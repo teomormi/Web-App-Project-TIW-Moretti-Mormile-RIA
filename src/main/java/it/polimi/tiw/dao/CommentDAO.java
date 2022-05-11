@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.lang.String;
+import java.nio.charset.Charset;
+
 
 import it.polimi.tiw.beans.Comment;
 import it.polimi.tiw.exceptions.BadCommentException;
@@ -42,7 +45,7 @@ public class CommentDAO {
 		String query = "INSERT into comment (user, text, image) VALUES (?, ?, ?)";
 		try(PreparedStatement pstatement = connection.prepareStatement(query);){
 			pstatement.setInt(1, idUser);
-			pstatement.setString(2, comment);
+			pstatement.setString(2,new String(comment.getBytes(Charset.forName("UTF-8")), Charset.forName("UTF-8")));
 			pstatement.setInt(3, idImg);
 			pstatement.executeUpdate();
 		} catch (SQLException e) {

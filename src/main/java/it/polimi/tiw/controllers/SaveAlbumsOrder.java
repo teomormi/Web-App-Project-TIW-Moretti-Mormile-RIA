@@ -53,6 +53,7 @@ public class SaveAlbumsOrder extends HttpServlet {
 			
 			for (String s : checkedIds)  {
 				albumId = Integer.parseInt(s);
+				// bisogna controllare che l'id sia di un tuo album! else throw exception
 				aDao.saveOrder(albumId, sorting);
 				sorting++;
 			}

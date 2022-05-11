@@ -503,21 +503,6 @@
 		this.reset = function() {
 			this.createBtn = null;
 		}
-
-		this.updateCheckbox = function(mineAlbums) {
-			var title, checkbox;
-			var self = this;
-			
-			mineAlbums.forEach(function(album) {
-				checkbox = document.createElement("input");
-				checkbox.type = 'checkbox';
-				checkbox.value = album.id;
-				checkbox.name = 'albums';
-				title = document.createElement("label");
-				title.innerHTML = album.title;
-				self.checkboxcontainer.append(checkbox, title,document.createElement("br"));
-			});
-		}
 		
 		this.registerEvents = function(_button,orchestrator) {
 	      this.createBtn = _button;

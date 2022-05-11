@@ -4,13 +4,9 @@
 
 
 .container{ height: auto; background-color: rgba(255,255,255,0.1); border-radius: 10px;
-  border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 0 8px rgba(17,65,105,0.4); padding: 30px 35px;}
+  border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 0 8px rgba(17,65,105,0.4); padding: 30px 35px;width: 400px; position: absolute; transform: translate(-50%,-50%); top: 50%; left: 50%;}
 
 .container *{ font-family: 'Acme', sans-serif; color: #111111; letter-spacing: 0.5px; outline: none; border: none;}
-
-.left{ width: 400px; position: absolute; transform: translate(-50%,-50%); top: 50%; left: 30%; }
-.right{ position: absolute; transform: translate(-50%,-50%); top: 50%; left: 65%;  width: 450px; }
-
 
 .container h3{ font-size: 32px; font-weight: 500; line-height: 42px; text-align: center;color:#114169;}
 
@@ -54,3 +50,8 @@ cursor: pointer;
 .container input[type=button]:hover{
 background-color: #114169;color:#FF9900;
 }
+
+#container_signup{display:none;}
+
+.change_tab{ text-align: center;padding: 5px 0px;margin-top:10px;}
+.change_tab:hover{color:#FF9900;}

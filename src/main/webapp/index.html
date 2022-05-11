@@ -8,7 +8,7 @@
     <script src="js/login.js" charset="utf-8" defer></script>
 </head>
 <body>
-  <div class="container left">
+  <div id="container_login" class="container">
         <h3>Login</h3>
         <form action="#" method="post">
         <label for="username">Username</label>
@@ -19,10 +19,10 @@
 		<input type="button" id="buttonlogin" value="Log In">
 		<p id="errormessage"></p>
         </form>
-        
+        <div onclick="signup()" class="change_tab">New account? Create here </div>
   </div>
 
-  <div class="container right ">
+  <div id="container_signup" class="container">
           <h3>Sign Up</h3>
           <form action="CreateUser" method="post">
           <label for="username">Username</label>
@@ -40,6 +40,19 @@
           <input type="button" id="buttonsign"value="Sign Up">
           <p id="errorsignup"></p>
           </form>
+          <div onclick="login()" class="change_tab">Have an account? Login here </div>
   </div>
+  
+  <script type="text/javascript">
+	function login() {
+		document.getElementById("container_signup").style.display = "none";
+		document.getElementById("container_login").style.display = "block";
+	}
+
+	function signup(){
+		document.getElementById("container_login").style.display = "none";
+		document.getElementById("container_signup").style.display = "block";
+	}
+	</script>
 </body>
 </html>

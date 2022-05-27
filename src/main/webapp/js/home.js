@@ -150,6 +150,8 @@
 				});
 		};
 
+		/*funzione che permette di aggiornare le componenti visive della lista degli album e 
+		della form di caricamento immagine*/
 		this.update = function(arraysAlbums) {
 			console.log(arraysAlbums[0]); // others albums
 			console.log(arraysAlbums[1]); //yours album

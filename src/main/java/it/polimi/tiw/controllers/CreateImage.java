@@ -22,7 +22,6 @@ import javax.servlet.http.Part;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import it.polimi.tiw.beans.User;
-import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.dao.AlbumImagesDAO;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImageDAO;
@@ -34,6 +33,11 @@ public class CreateImage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
 	String folderPath = "";
+	
+	public CreateImage() {
+		super();
+	}
+	
 	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
@@ -51,11 +55,12 @@ public class CreateImage extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
 		
 		Integer idUser = null;
 		String title = null;
 		String description = null;
+		
 		String[] checkedIds = null;
 		List<Integer> listIds = new ArrayList<Integer>();
 		
@@ -69,38 +74,45 @@ public class CreateImage extends HttpServlet {
 			checkedIds = request.getParameterValues("albums");
 			
 			if(title.equals("") || title==null) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Your title cannot be empty");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Your title cannot be empty");
+				
 				return;
 			}
 			if(description.equals("") || description==null) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Your description cannot be empty");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Your description cannot be empty");
 				return;
 			}
 			if (checkedIds == null) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Image should have an album");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Image should have an album");
 				return;
 			}
 			
-			// Check that the ids sent are valid == correspond to courses of actual user
+			// Check that the ids sent are valid == correspond to album of actual user
 			AlbumDAO aDao = new AlbumDAO(connection);
 			
 			for (String s : checkedIds) {
 				Integer id = Integer.parseInt(s);
 				if(aDao.getAlbumByID(id).getUserId()!=idUser) {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Violated access to album!");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println("Violated access to album!");
 					return;
 				}
 				
 				listIds.add(id);
 			}
+			
 			if (listIds.size() == 0) {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "At least one album must be selected");
-					return;
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println( "At least one album must be selected");
 			}
 			
 			//check the file			
 			if (filePart == null || filePart.getSize() <= 0) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing file in request!");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Missing file in request!");
 				return;
 			}
 			
@@ -108,12 +120,14 @@ public class CreateImage extends HttpServlet {
 			String contentType = filePart.getContentType();
 			
 			if (!contentType.startsWith("image")) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "File format not permitted");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("File format not permitted");
 				return;
 			}
 		}
-		catch (NumberFormatException | SQLException | NullPointerException e ) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
+		catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Incorrect or missing param values");
 			return;
 		}
 		
@@ -133,28 +147,28 @@ public class CreateImage extends HttpServlet {
 		
 
 		File file = new File(outputPath);
+		
 		ImageDAO iDao = new ImageDAO(connection);
 		AlbumImagesDAO aiDao = new AlbumImagesDAO(connection);
-		Image img = null;
+		Integer newImgId = null;
 
 		try{
 			// check if file with same path already exist
 			if(file.exists()) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "File name already exist");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println( "File name already exist");
 				return;
 			}
 			
 			InputStream fileContent = filePart.getInputStream(); // get file content
 			Files.copy(fileContent, file.toPath()); // copy file
 			
-			// create image and referenced to album
+			// create image on db and referenced to album
 			connection.setAutoCommit(false);
-			iDao.createImage(fileName, description, title, idUser.intValue());
-			
-			img = iDao.getImageByPath(fileName);
+			newImgId = iDao.createImage(fileName, description, title, idUser.intValue());
 			
 			for(Integer id : listIds) {
-				aiDao.addImageToAlbum(img.getId(), id);
+				aiDao.addImageToAlbum(newImgId, id);
 			}
 			connection.commit();
 			
@@ -166,7 +180,8 @@ public class CreateImage extends HttpServlet {
 					connection.rollback();
 			} catch (SQLException errorSQL) { errorSQL.printStackTrace();}
 			e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while saving file");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error while saving file");
 		}		
 		
 		

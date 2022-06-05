@@ -31,14 +31,15 @@ public class GetImage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		String pathInfo = request.getPathInfo();
 		// PathInfo: The part of the request path that is not part of the Context Path
 		// or the Servlet Path.
-		// It is either null if there is no extra path, or is a string with a leading
-		// ‘/’
+		// It is either null if there is no extra path, or is a string with a leading /
 
 		if (pathInfo == null || pathInfo.equals("/")) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing file name!");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Missing file name!");
 			return;
 		}
 
@@ -50,7 +51,8 @@ public class GetImage extends HttpServlet {
 		System.out.println(filename);
 
 		if (!file.exists() || file.isDirectory()) {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND, "File not present");
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			response.getWriter().println("File not present");
 			return;
 		}
 
@@ -58,9 +60,8 @@ public class GetImage extends HttpServlet {
 		response.setHeader("Content-Type", getServletContext().getMimeType(filename));
 		response.setHeader("Content-Length", String.valueOf(file.length()));
 		
-		//TODO: test what happens  if you change inline by  attachment
 		response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
-		// HERE https://stackoverflow.com/questions/1812244/																							
+																									
 		// copy file to output stream
 		Files.copy(file.toPath(), response.getOutputStream());
 	}

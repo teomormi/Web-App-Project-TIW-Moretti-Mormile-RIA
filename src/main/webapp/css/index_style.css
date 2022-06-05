@@ -55,3 +55,5 @@ background-color: #114169;color:#FF9900;
 
 .change_tab{ text-align: center;padding: 5px 0px;margin-top:10px;}
 .change_tab:hover{color:#FF9900;}
+
+.error{margin-top:10px; color: red; text-transform:uppercase;}

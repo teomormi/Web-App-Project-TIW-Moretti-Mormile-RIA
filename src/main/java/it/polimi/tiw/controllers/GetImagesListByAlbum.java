@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +19,14 @@ import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/GetImagesList")
+@MultipartConfig
 public class GetImagesListByAlbum extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
+	
+	public GetImagesListByAlbum() {
+		super();
+	}
 	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
@@ -34,24 +40,17 @@ public class GetImagesListByAlbum extends HttpServlet {
 		}
 	}
 	
-	Image getActiveImage(int id,List<Image> arrayImgs) {
-		for(Image i : arrayImgs)
-			if(i.getId() == id)
-				return i;
-		return null;
-	}
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
 	
 		ImageDAO iDao = new ImageDAO(connection);
 		Integer IdAlbum;
 		
-		
 		try {
 			IdAlbum = Integer.parseInt(request.getParameter("albumid"));				
 		}
-		catch (NumberFormatException | NullPointerException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
+		catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Incorrect or missing param values");
 			return;
 		}
 		
@@ -61,7 +60,8 @@ public class GetImagesListByAlbum extends HttpServlet {
 			listImages = iDao.getImagesFromAlbum(IdAlbum);
 		} 
 		catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover images from album");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Not possible to recover images from album");
 			return;
 		}
 		

@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import it.polimi.tiw.beans.Album;
-import it.polimi.tiw.exceptions.BadAlbumException;
 
 
 public class AlbumDAO {
@@ -73,9 +72,7 @@ public class AlbumDAO {
 		return albums;
 	}
 	
-	public int createAlbum(String title, int idUser) throws SQLException, BadAlbumException {
-		if(title == null || title.equals(""))
-			throw new BadAlbumException("Not valid title");
+	public int createAlbum(String title, int idUser) throws SQLException{
 		String query = "INSERT INTO album (title,user) VALUES (?,?)";
 		try (PreparedStatement pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			pstatement.setString(1, title);

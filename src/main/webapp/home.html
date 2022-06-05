@@ -10,8 +10,8 @@
 </head>
 <body>
   <!-- alert -->
-  <div class="alert">
-    <span class="closebtn" onclick="this.parentElement.style.display='none';">X</span>
+  <div class="alert_container">
+    <span id="closebtn" onclick="this.parentElement.style.visibility='hidden';">X</span>
     <p id="alert">Danger! Indicates a dangerous or potentially negative action.</p>
   </div>
   <!-- header menu -->
@@ -62,7 +62,6 @@
   	            </div>
   	            <p>SCEGLI ALBUM DOVE SALVARE</p>
   	            <div id="minealbums_checkbox">
-                  <!-- inizializzare tramite js -->
   	              <input type="checkbox" name="albums">
   	            	<label> Album 1</label></br>
                   <input type="checkbox" name="albums">
@@ -72,7 +71,7 @@
   	          </form>
           	</div>
           </li>
-          <li><a id="button_logout">Logout</a></li>
+          <li><a id="button_logout" href="Logout">Logout</a></li>
         </ul>
       </nav>
     </header>
@@ -120,8 +119,8 @@
           <a id="button_right" href="#"><button>»</button></a>
         </div>
 
-
-        <div id="image_details">
+	<div id="myModal" class="modal">
+		<div id="image_details" class="modal-content">
           <!-- here the full scale image -->
           
           <div id="image_description">
@@ -157,9 +156,9 @@
           </aside>
 
         </div>
+      </div>
         <!-- / content body -->
     </div>
-
 
     <!-- footer -->
     <div id="footer_container" class="block">

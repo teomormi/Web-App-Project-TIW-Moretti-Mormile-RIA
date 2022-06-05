@@ -3,30 +3,20 @@
  */
 
 (function() { // avoid variables ending up in the global scope
-	/*aggiungo evento di click sul bottone del login */
+
   document.getElementById("buttonlogin").addEventListener('click', (e) => {
-	/*quando clicco recupero la form, controllo i dati, se sono ok eseguo un chiamata col metodo POST */
-    var form = e.target.closest("form"); 
+    var form = e.target.closest("form");
     if (form.checkValidity()) {
       makeCall("POST", 'CheckLogin', e.target.closest("form"),
         function(x) {
           if (x.readyState == XMLHttpRequest.DONE) {
             var message = x.responseText;
-            switch (x.status) {
-              case 200:
-            	sessionStorage.setItem('user', message); //salvo l'utente nella sessione
-                window.location.href = "home.html"; //vado alla home
-                break;
-              case 400: // bad request
-                document.getElementById("errormessage").textContent = message;
-                break;
-              case 401: // unauthorized
-                  document.getElementById("errormessage").textContent = message;
-                  break;
-              case 500: // server error
-            	document.getElementById("errormessage").textContent = message;
-                break;
-            }
+            if (x.status == 200) {
+				sessionStorage.setItem('user', message);
+                window.location.href = "home.html";
+             } else {
+					document.getElementById("errormessage").textContent = message;
+			 }
           }
         }
       );
@@ -37,26 +27,30 @@
   
   document.getElementById("buttonsign").addEventListener('click', (e) => {
     var form = e.target.closest("form");
+    var pass1 = form.querySelector("input[name='password']").value;
+	var pass2 = form.querySelector("input[name='passconfirm']").value;
+	if(pass1 != pass2) {
+		document.getElementById("errorsignup").textContent = "The two passwords must be identical";
+		return;
+	}
+    var email = form.querySelector("input[name='email']").value;  
+    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;    
+	if(!email.match(validRegex)){
+		document.getElementById("errorsignup").textContent = "Please insert a valid email";
+		return;
+	}  
+   
     if (form.checkValidity()) {
       makeCall("POST", 'CreateUser', e.target.closest("form"),
         function(x) {
           if (x.readyState == XMLHttpRequest.DONE) {
             var message = x.responseText;
-            switch (x.status) {
-              case 200:
-            	sessionStorage.setItem('user', message);
+            if (x.status == 200) {
+				sessionStorage.setItem('user', message);
                 window.location.href = "home.html";
-                break;
-              case 400: // bad request
-                document.getElementById("errorsignup").textContent = message;
-                break;
-              case 401: // unauthorized
-                  document.getElementById("errorsignup").textContent = message;
-                  break;
-              case 500: // server error
-            	document.getElementById("errorsignup").textContent = message;
-                break;
-            }
+             } else {
+					document.getElementById("errorsignup").textContent = message;
+			 }
           }
         }
       );

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +18,15 @@ import it.polimi.tiw.dao.CommentDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/GetCommentsList")
+@MultipartConfig
 public class GetCommentsList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
+	
+	public GetCommentsList() {
+		super();
+	}
+	
 	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
@@ -38,8 +45,9 @@ public class GetCommentsList extends HttpServlet {
 		Integer imageId = null;
 		try {
 			imageId = Integer.parseInt(request.getParameter("image"));
-		} catch (NumberFormatException | NullPointerException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Incorrect or missing param values");
 			return;
 		}		
 
@@ -49,7 +57,8 @@ public class GetCommentsList extends HttpServlet {
 		try {
 			comments = cDAO.getCommentsFromImages(imageId);
 		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Not possible to recover comments");			
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Not possible to recover comments");			
 			return;
 		}
 			

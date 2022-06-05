@@ -1,5 +1,5 @@
 package it.polimi.tiw.controllers;
-// ok
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -36,15 +36,17 @@ public class CheckLogin extends HttpServlet {
 		// obtain and escape params
 		String usrn = null;
 		String pwd = null;
+		
 		try {
 			usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
 			pwd = StringEscapeUtils.escapeJava(request.getParameter("password"));
 			if (usrn == null || pwd == null || usrn.isEmpty() || pwd.isEmpty()) {
-				throw new Exception("Missing or empty credential value");
+				throw new Exception();
 			}
 
 		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Missing credential value");
 			return;
 		}
 
@@ -54,7 +56,8 @@ public class CheckLogin extends HttpServlet {
 		try {
 			user = userDao.checkLogin(usrn,usrn, pwd);
 		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not Possible to check credentials");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Not Possible to check credentials");
 			return;
 		}
 
@@ -62,7 +65,8 @@ public class CheckLogin extends HttpServlet {
 		// show login page with error message
 
 		if (user == null) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user or wrong password");
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getWriter().println("Incorrect credentials");
 			return;
 		} else {
 			request.getSession().setAttribute("user", user);
@@ -70,7 +74,6 @@ public class CheckLogin extends HttpServlet {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().println(usrn);
-			
 		}
 
 	}

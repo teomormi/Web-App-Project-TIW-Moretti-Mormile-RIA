@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.UserDAO;
-import it.polimi.tiw.exceptions.BadUserException;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/CreateUser")
@@ -25,6 +24,11 @@ import it.polimi.tiw.utils.ConnectionHandler;
 public class CreateUser extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
+	
+	public CreateUser() {
+		super();
+	}
+	
 	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
@@ -90,13 +94,15 @@ public class CreateUser extends HttpServlet{
 			}
 			
 		}
-		catch (NumberFormatException | NullPointerException e) {
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		response.getWriter().println("Incorrect or missing param values");
+		catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Incorrect or missing param values");
 		return;
 		}
 		
 		UserDAO uDAO = new UserDAO(connection);
+		int uID;
+		
 		try {
 			if(!uDAO.isMailAvailable(email)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -105,29 +111,22 @@ public class CreateUser extends HttpServlet{
 			}
 			if(!uDAO.isUsernameAvailable(username)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("email isn't available");
+				response.getWriter().println("username isn't available");
 				return;
 			}
 			
-			uDAO.registerUser(username, email, password);
+			uID = uDAO.registerUser(username, email, password);
 			
 		} catch (SQLException e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Not possible to register user");
 			return;
-		} catch (BadUserException e ) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Incorrect param values");
-			return;
-		}
-		User usr = null;
-		//utente in sessione e vado in checkLogin
-		try {
-			usr = uDAO.getUserByUsername(username);
-		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
-			return;
-		}
+		} 
+		
+		User usr = new User();
+		usr.setId(uID);
+		usr.setUsername(username);
+		
 		request.getSession().setAttribute("user",usr);
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json");

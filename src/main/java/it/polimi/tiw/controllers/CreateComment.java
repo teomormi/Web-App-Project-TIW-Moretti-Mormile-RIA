@@ -17,7 +17,6 @@ import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.CommentDAO;
 import it.polimi.tiw.dao.ImageDAO;
-import it.polimi.tiw.exceptions.BadCommentException;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/CreateComment")
@@ -26,6 +25,11 @@ public class CreateComment extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
+	
+	public CreateComment() {
+		super();
+	}
+	
 	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
@@ -47,21 +51,21 @@ public class CreateComment extends HttpServlet{
 		Integer usrID = null;
 		String text = null;
 		
+		/* Extracts parameters from POST */
 		User usr = (User) session.getAttribute("user");	
 		usrID = usr.getId();
 		
-		/* Extracts parameters from POST */
-		
 		try {
+			
 			imageId = Integer.parseInt(request.getParameter("image"));
 			text = StringEscapeUtils.escapeJava(request.getParameter("text"));
 			/* Text parameter cannot be empty */
-			if(text == null || text.equals("")) {
+			if(text.equals("") || text==null || imageId == null) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("Your comment cannot be empty");
 				return;
 			}
-		} catch (NumberFormatException | NullPointerException e) {
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Incorrect or missing param values");
 			return;
@@ -74,16 +78,15 @@ public class CreateComment extends HttpServlet{
 		try {
 			img = iDao.getImageByID(imageId);
 			if(img == null) {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image not found");
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().println("Image not found");
 				return;
 			}
 			cDao.createComment(imageId, text , usrID);
 		}
 		catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to create comment");
-			return;
-		} catch (BadCommentException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Not possible to create comment");
 			return;
 		}
 		

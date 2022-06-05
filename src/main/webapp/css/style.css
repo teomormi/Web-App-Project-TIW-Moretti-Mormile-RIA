@@ -29,9 +29,11 @@ header nav ul li a{font-size: 20px;}
 .dropdown-content {display: none; position: absolute; background-color: #f9f9f9;min-width: 80px; border-radius: 2px; z-index: 1;height:auto;}
 .dropdown:hover .dropdown-content {display: block;}
 
-.alert{visibility:hidden;width:auto;position: absolute;  padding: 20px;  background-color: #f44336;  color: white;  z-index: 1;}
-.closebtn {  margin-right: 5%; color: white; font-weight: bold; float: right; font-size: 14px; line-height: 20px; cursor: pointer;}
-.closebtn:hover {  color: black;}
+.alert_container{visibility:hidden;position: absolute;  padding: 20px;  background-color: #f44336;  color: white;  z-index: 1; width: -moz-available;}
+.alert_container p{font-size:20px;}
+
+#closebtn { position:absolute; top: 30px; right: 30px;font-size:20px;}
+#closebtn:hover {  color: black;}
 
 
 /*------------------------- Create album and image ------------------*/
@@ -97,9 +99,38 @@ tr.album:hover{background-color:#d9d9d9;}
 #button_container{height: 50px;}
 #button_container *{display: inline;}
 #button_container button{display: inline;background-color: #ffffff;padding: 5px 15px; font-family: "Acme";font-size:50px; border-radius: 10px;border:1px solid white;color:#89bae0;}
-#button_left{float:left; margin-left: 200px;}
-#button_right {float:right; margin-right: 200px;}
+#button_left{float:left; margin-left: 0px;}
+#button_right {float:right; margin-right: 0px;}
 #button_container button:hover{color:#FF9900;}
+
+/*---------------- Modal window ------------ */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index:2;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+  display: block; 
+  overflow: auto;
+  margin-bottom: 100px;
+  border-radius:10px;
+}
 
 /*------------ Selected image Album------------*/
 
@@ -132,5 +163,4 @@ tr.album:hover{background-color:#d9d9d9;}
 /*----------------------------------------------Footer-------------------------------------*/
 
 #footer_container{border-top:1px solid #DEDEDE;width:100%;background-color: #89bae0;height: 60px;}
-
 footer p{margin-bottom: 15px; padding:0;text-align:center;color: #ffffff;margin-top: 15px;font-size:18px;text-transform:uppercase;}

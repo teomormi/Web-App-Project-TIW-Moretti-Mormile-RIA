@@ -3,10 +3,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import it.polimi.tiw.beans.Image;
-import it.polimi.tiw.exceptions.BadImageException;
 
 public class ImageDAO {
 	private Connection connection;
@@ -57,44 +57,20 @@ public class ImageDAO {
 		
 	}
 	
-	public Image getImageByPath(String path) throws SQLException{
-		
-		String query = "SELECT * FROM image WHERE path = ?";
-		try(PreparedStatement pstatement = connection.prepareStatement(query);){
-			pstatement.setString(1, path);
-			try(ResultSet result = pstatement.executeQuery()){
-				if(!result.isBeforeFirst())
-					return null;
-				result.next();
-				Image img = new Image();
-				img.setId(result.getInt("id"));
-				img.setDescription(result.getString("description"));
-				img.setPath(result.getString("path"));
-				img.setTitle(result.getString("title"));
-				img.setUserId(result.getInt("user"));
-				img.setDate(result.getDate("date"));
-				return img;
-			}
-		}	
-	}
-	
-	
-	public void createImage(String path, String description,String title,int idUser) throws BadImageException, SQLException {
-		if(path==null || path.equals(""))
-			throw new BadImageException("Path isn't valid");
-		if(description==null || description.equals(""))
-			throw new BadImageException("Description isn't valid");
-		if(title==null || title.equals(""))
-			throw new BadImageException("Title isn't valid");
-		
+	public int createImage(String path, String description,String title,int idUser) throws SQLException {
 		String query = "INSERT into image (path, description, title, user) VALUES (?, ?, ?, ?)";
-		
-		try(PreparedStatement pstatement = connection.prepareStatement(query);){
+		try (PreparedStatement pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			pstatement.setString(1, path);
 			pstatement.setString(2, description);
 			pstatement.setString(3, title);
 			pstatement.setInt(4, idUser);
-			pstatement.executeUpdate();		
+			pstatement.executeUpdate();
+			ResultSet generatedKeys = pstatement.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				return generatedKeys.getInt(1);
+			} else {
+				throw new SQLException("Creating image failed, no ID obtained.");
+			}
 		}
 	}
 	

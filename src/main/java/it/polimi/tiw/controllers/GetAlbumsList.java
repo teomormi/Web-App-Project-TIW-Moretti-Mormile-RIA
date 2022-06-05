@@ -1,5 +1,5 @@
 package it.polimi.tiw.controllers;
-// ok
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,6 +24,11 @@ public class GetAlbumsList extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
 	
+	public GetAlbumsList() {
+		super();
+	}
+	
+	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
@@ -42,7 +47,7 @@ public class GetAlbumsList extends HttpServlet{
 		ArrayList<Album> albums = null;
 		ArrayList<Album> albumsMine = null;
 		
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
 		
 		User usr = (User) session.getAttribute("user");	
 		Integer usrId = usr.getId();
@@ -52,7 +57,8 @@ public class GetAlbumsList extends HttpServlet{
 			albumsMine = aDao.getAlbumsByUserID(usrId);
 		}
 		catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover albums");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Not possible to recover albums");
 			return;
 		}
 		

@@ -16,8 +16,9 @@
 
         <label for="password">Password</label>
         <input type="password" placeholder="Password" name="password" required>
+        <p id="errormessage" class="error"></p>
 		<input type="button" id="buttonlogin" value="Log In">
-		<p id="errormessage"></p>
+		
         </form>
         <div onclick="signup()" class="change_tab">New account? Create here </div>
   </div>
@@ -37,8 +38,10 @@
           <label for="password">Confirm Password</label>
           <input type="password" placeholder="Password" name="passconfirm" required>
 
+		  <p id="errorsignup" class="error"></p>
+		  
           <input type="button" id="buttonsign"value="Sign Up">
-          <p id="errorsignup"></p>
+          
           </form>
           <div onclick="login()" class="change_tab">Have an account? Login here </div>
   </div>

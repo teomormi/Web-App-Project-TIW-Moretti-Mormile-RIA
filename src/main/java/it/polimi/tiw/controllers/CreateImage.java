@@ -26,6 +26,7 @@ import it.polimi.tiw.dao.AlbumImagesDAO;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImageDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.InputValidator;
 
 @WebServlet("/CreateImage")
 @MultipartConfig
@@ -73,13 +74,13 @@ public class CreateImage extends HttpServlet {
 			description = StringEscapeUtils.escapeJava(request.getParameter("description"));
 			checkedIds = request.getParameterValues("albums");
 			
-			if(title.equals("") || title==null) {
+			if(!InputValidator.isStringValid(title)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("Your title cannot be empty");
 				
 				return;
 			}
-			if(description.equals("") || description==null) {
+			if(!InputValidator.isStringValid(description)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("Your description cannot be empty");
 				return;
@@ -172,8 +173,11 @@ public class CreateImage extends HttpServlet {
 			}
 			connection.commit();
 			
-			System.out.println("File saved correctly!");
-			response.setStatus(HttpServletResponse.SC_OK);	
+			System.out.println("File saved correctly!");	
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().print(listIds.get(0));	
 			
 		} catch (Exception e) {
 			try {

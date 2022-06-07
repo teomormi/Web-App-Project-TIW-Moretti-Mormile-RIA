@@ -52,7 +52,7 @@ public class GetImage extends HttpServlet {
 
 		if (!file.exists() || file.isDirectory()) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			response.getWriter().println("File not present");
+			response.getWriter().println("File not found");
 			return;
 		}
 

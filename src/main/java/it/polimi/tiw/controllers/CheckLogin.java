@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.UserDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.InputValidator;
 
 @WebServlet("/CheckLogin")
 @MultipartConfig
@@ -40,10 +41,14 @@ public class CheckLogin extends HttpServlet {
 		try {
 			usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
 			pwd = StringEscapeUtils.escapeJava(request.getParameter("password"));
-			if (usrn == null || pwd == null || usrn.isEmpty() || pwd.isEmpty()) {
-				throw new Exception();
+			if(!InputValidator.isStringValid(usrn)) {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Username cannot be empty");
 			}
-
+			if(!InputValidator.isStringValid(pwd)) {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Password cannot be empty");
+			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Missing credential value");

@@ -3,7 +3,6 @@ package it.polimi.tiw.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.Arrays;
@@ -41,20 +40,18 @@ public class SaveAlbumsOrder extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
-		
 		User usr = (User) session.getAttribute("user");	
 		Integer usrId = usr.getId();
 
-		String objarray = request.getParameter("objarray").toString();
-
-		String[] numberStrs = objarray.split("\\s*,\\s*");
-		int[] numbers = new int[numberStrs.length];
+		String csvString = request.getParameter("objarray");
+		
+		String[] numberString = csvString.split("\\s*,\\s*");
+		int[] numbers = new int[numberString.length];
 		
 		int index = 0;
-		
-		for(int i = 0;i < numberStrs.length;i++){
+		for(int i = 0;i < numberString.length;i++){
 		    try{
-		        numbers[index] = Integer.parseInt(numberStrs[i]);
+		        numbers[index] = Integer.parseInt(numberString[i]);
 		        index++;
 		    }catch (Exception e){
 		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -62,10 +59,6 @@ public class SaveAlbumsOrder extends HttpServlet {
 				return;
 		    }
 		}
-		
-		// Now there will be a number of 'invalid' elements 
-		// at the end which will need to be trimmed
-		numbers = Arrays.copyOf(numbers, index);
 		
 		if (numbers.length == 0) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -75,13 +68,11 @@ public class SaveAlbumsOrder extends HttpServlet {
 		
 		// Id duplicati
 		Set<String> items = new HashSet<>();
-		List<String> checkedIds = Arrays.asList(objarray.split("\\s*,\\s*"));
-		
-		Set<String> duplicateItems = checkedIds.stream()
+		Set<String> duplicateItems = Arrays.asList(numberString).stream()
 			 		.filter(id -> !items.add(id)) // Set.add() returns false if the element was already in the set.
 			 		.collect(Collectors.toSet());
 		
-		if(duplicateItems.size()>0) {
+		if(duplicateItems.size( )> 0) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Duplicate album id");
 			return;

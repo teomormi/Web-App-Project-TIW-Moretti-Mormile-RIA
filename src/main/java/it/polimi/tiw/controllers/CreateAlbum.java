@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.InputValidator;
 
 @WebServlet("/CreateAlbum")
 @MultipartConfig
@@ -56,7 +57,7 @@ public class CreateAlbum extends HttpServlet{
 		try {
 			
 			title = StringEscapeUtils.escapeJava(request.getParameter("title"));
-			if(title.equals("") || title==null) {
+			if(!InputValidator.isStringValid(title)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("Your album title cannot be empty");
 				return;

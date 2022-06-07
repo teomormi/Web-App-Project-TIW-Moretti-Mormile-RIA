@@ -54,7 +54,7 @@ public class AlbumDAO {
 	}
 	
 	public ArrayList<Album> getAlbumsByUserID(int id) throws SQLException{
-		String query = "SELECT * FROM album WHERE user = ? order by case when sorting is null then 1 else 0 end, sorting,id";
+		String query = "SELECT * FROM album WHERE user = ? order by case when sorting is null then 1 else 0 end, sorting,date DESC";
 		ArrayList<Album> albums = new ArrayList<Album>(); 
 		try(PreparedStatement pstatement = connection.prepareStatement(query)) {
 			pstatement.setInt(1, id);

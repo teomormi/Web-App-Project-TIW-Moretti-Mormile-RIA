@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.UserDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.InputValidator;
 
 @WebServlet("/CreateUser")
 @MultipartConfig
@@ -41,13 +42,6 @@ public class CreateUser extends HttpServlet{
 			e.printStackTrace();
 		}
 	}
-	
-	boolean isStringValid(String s) {
-		if(s==null || s.equals(""))
-			return false;
-		return true;
-	}
-	
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
 		
@@ -64,12 +58,12 @@ public class CreateUser extends HttpServlet{
 			password = StringEscapeUtils.escapeJava(request.getParameter("password"));
 			passConfirm = StringEscapeUtils.escapeJava(request.getParameter("passconfirm"));
 			
-			if(!isStringValid(username)) {
+			if(!InputValidator.isStringValid(username)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("Username cannot be empty");
 				return;
 			}
-			if(!isStringValid(email)) {
+			if(!InputValidator.isStringValid(email)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("Email cannot be empty");
 				return;
@@ -82,7 +76,7 @@ public class CreateUser extends HttpServlet{
 				return;				
 			}
 			
-			if(!isStringValid(password)) {
+			if(!InputValidator.isStringValid(password)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("Password cannot be empty");
 				return;
@@ -106,12 +100,12 @@ public class CreateUser extends HttpServlet{
 		try {
 			if(!uDAO.isMailAvailable(email)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("email isn't available");
+				response.getWriter().println("Email isn't available");
 				return;
 			}
 			if(!uDAO.isUsernameAvailable(username)) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("username isn't available");
+				response.getWriter().println("Username isn't available");
 				return;
 			}
 			

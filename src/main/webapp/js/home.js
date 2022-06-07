@@ -33,7 +33,7 @@
 			uploadImage = new UploadImage(
 				alertContainer,
 				document.getElementById("minealbums_checkbox"));
-			uploadImage.registerEvents(document.getElementById("button_uploadimage"));
+			uploadImage.registerEvents(document.getElementById("button_uploadimage"),this);
 
 			albumsList = new AlbumsList(
 				alertContainer,
@@ -433,7 +433,7 @@
 			this.createBtn = _button;
 			this.createBtn.addEventListener('click', (e) => {
 				var form = e.target.closest("form");
-				if(form.querySelector("input[name='text']").value != ""){	
+				if(form.querySelector("textarea[name='text']").value != ""){	
 					if (form.checkValidity()) {
 						var self = this;
 						makeCall("POST", 'CreateComment', form,
@@ -484,7 +484,7 @@
 			});
 		}
 		
-		this.registerEvents = (_button) => {
+		this.registerEvents = (_button,orchestrator) => {
 			this.createBtn = _button;
 			this.createBtn.addEventListener('click', (e) => {
 				var form = e.target.closest("form");
@@ -498,6 +498,8 @@
 								if (req.status != 200) {
 									self.alert.textContent = message;
 									self.alert.parentElement.style.visibility = "visible";
+								}else{
+									orchestrator.refresh(JSON.parse(req.responseText));
 								}
 							}
 						}

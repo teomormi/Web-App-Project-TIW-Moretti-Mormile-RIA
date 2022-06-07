@@ -19,7 +19,7 @@ public class CommentDAO {
 	}
 	
 	public ArrayList<Comment> getCommentsFromImages(int idImg) throws SQLException{
-		String query = "SELECT c.id,text,date,image,username FROM comment as c,user as u where c.user=u.id and image = ?";
+		String query = "SELECT c.id,text,date,image,username FROM comment as c,user as u where c.user=u.id and image = ? ORDER BY date DESC";
 		ArrayList<Comment> comments = new ArrayList<Comment>();
 		try(PreparedStatement pstatement = connection.prepareStatement(query);){
 			pstatement.setInt(1, idImg);

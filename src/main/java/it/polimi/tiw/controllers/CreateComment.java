@@ -18,6 +18,7 @@ import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.CommentDAO;
 import it.polimi.tiw.dao.ImageDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.InputValidator;
 
 @WebServlet("/CreateComment")
 @MultipartConfig
@@ -60,11 +61,13 @@ public class CreateComment extends HttpServlet{
 			imageId = Integer.parseInt(request.getParameter("image"));
 			text = StringEscapeUtils.escapeJava(request.getParameter("text"));
 			/* Text parameter cannot be empty */
-			if(text.equals("") || text==null || imageId == null) {
+			
+			if(!InputValidator.isStringValid(text)){
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("Your comment cannot be empty");
+				response.getWriter().println("Your comment text cannot be empty");
 				return;
-			}
+			}		
+			
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Incorrect or missing param values");

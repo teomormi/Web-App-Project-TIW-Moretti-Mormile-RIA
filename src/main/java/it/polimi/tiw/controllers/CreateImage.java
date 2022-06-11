@@ -8,7 +8,11 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -103,6 +107,18 @@ public class CreateImage extends HttpServlet {
 				}
 				
 				listIds.add(id);
+			}
+			
+			// Id duplicati
+			Set<String> items = new HashSet<>();
+			Set<String> duplicateItems = Arrays.asList(checkedIds).stream()
+				 		.filter(id -> !items.add(id)) // Set.add() returns false if the element was already in the set.
+				 		.collect(Collectors.toSet());
+			
+			if(duplicateItems.size( )> 0) {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println(" Duplicate album id");
+				return;
 			}
 			
 			if (listIds.size() == 0) {

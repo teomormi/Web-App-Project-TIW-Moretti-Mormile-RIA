@@ -87,7 +87,7 @@ public class SaveAlbumsOrder extends HttpServlet {
 			for(int i = 0;i < numbers.length;i++){
 		   		album = aDao.getAlbumByID(numbers[i]);
 				if(album.getUserId() != usrId) {
-					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 					response.getWriter().println("Violated access to album");
 					return;
 			    }

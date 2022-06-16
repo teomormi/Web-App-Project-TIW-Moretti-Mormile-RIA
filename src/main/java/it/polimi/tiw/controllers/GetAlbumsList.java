@@ -42,6 +42,7 @@ public class GetAlbumsList extends HttpServlet{
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+		
 	
 		AlbumDAO aDao = new AlbumDAO(connection);
 		ArrayList<Album> albums = null;
@@ -62,13 +63,15 @@ public class GetAlbumsList extends HttpServlet{
 			return;
 		}
 		
+		
 		/* Add albums as json parameter */
 		
 		String json1 = new Gson().toJson(albums); 
 		String json2 = new Gson().toJson(albumsMine); 
+		String json3 = new Gson().toJson(usr); // return also username
 		response.setContentType("application/json"); 
 		response.setCharacterEncoding("utf-8"); 
-		String bothJson = "["+json1+","+json2+"]"; //Put both objects in an array of 2 elements
+		String bothJson = "["+json1+","+json2+","+json3+"]"; //Put both objects in an array of 2 elements
 		response.getWriter().write(bothJson);
 		
 	}

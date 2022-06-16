@@ -11,21 +11,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class NotLoggedChecker implements Filter{
+public class HomeChecker implements Filter{
 	
 @Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		
+		System.out.print("Logged filter executing ...\n");
+	
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
-		String loginpath = req.getServletContext().getContextPath() + "/home.html";
+		String loginpath = req.getServletContext().getContextPath() + "/index.html";
 
-		System.out.print("Not Logged filter executing ...\n");
+		
 		HttpSession s = req.getSession();
-		if (s.getAttribute("user") != null) {
-			System.out.println("User already auth");
+		if(s.getAttribute("user") == null) {
 			res.sendRedirect(loginpath);
+			System.out.print("Login checker FAILED...\n");
 			return;
 		}
 		// pass the request along the filter chain

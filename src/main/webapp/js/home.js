@@ -9,12 +9,8 @@
 	}
 
 	window.addEventListener("load", () => {
-		if (sessionStorage.getItem("user") == null) {
-			window.location.href = "index.html";
-		} else {
-			pageOrchestrator.start(); // initialize the components
-			pageOrchestrator.refresh();  // display initial content
-		}
+		pageOrchestrator.start(); // initialize the components
+		pageOrchestrator.refresh();  // display initial content
 	}, false);
 
 	function PageOrchestrator() {
@@ -23,9 +19,6 @@
 
 		this.start = function() {
 			
-			headerName = new HeaderName(sessionStorage.getItem('user'), document.getElementById("user_name"));
-			headerName.show();
-
 			// need the orchestrator when refresh al pages
 			createAlbum = new CreateAlbum(alertContainer);
 			createAlbum.registerEvents(document.getElementById("button_createalbum"),this);
@@ -38,7 +31,8 @@
 			albumsList = new AlbumsList(
 				alertContainer,
 				document.getElementById("albums_container"),
-				document.getElementById("albums_containerbody"));
+				document.getElementById("albums_containerbody"),
+				document.getElementById("user_name"));
 			albumsList.registerEvents(document.getElementById("save_list"));
 
 			imagesList = new ImagesList(
@@ -54,10 +48,7 @@
 				document.getElementById("comment_container"),
 				document.getElementById("new_comment"));
 			imageDetails.registerEvents(document.getElementById("button_comment"));
-
-			document.getElementById("button_logout").addEventListener('click', () => {
-				window.sessionStorage.removeItem('user');
-			})
+			
 		};
 
 		this.refresh = function(currentAlbum) {
@@ -73,19 +64,11 @@
 		};
 	}
 
-	function HeaderName(_username, _namecontainer) {
-		this.username = _username;
-		this.namecontainer = _namecontainer;
-
-		this.show = function() {
-			this.namecontainer.textContent = "Welcome " + this.username;
-		}
-	}
-
-	function AlbumsList(_alert, _albums_container, _albums_containerbody) { // add album name
+	function AlbumsList(_alert, _albums_container, _albums_containerbody,_namecontainer) { // add album name
 		this.alert = _alert;
 		this.albums_container = _albums_container;
 		this.albums_containerbody = _albums_containerbody;
+		this.namecontainer = _namecontainer;
 		this.saveBtn;
 		this.startElement;
 
@@ -107,9 +90,9 @@
 					dataType: 'json',
 					data: param,
 					success: function(data){},
-					error: function(xhr, textStatus, error) {
-						self.alert.textContent = error;
-						self.alert.parentElement.style.display='block';
+					error: function(res) {
+						self.alert.textContent = res.responseText;
+						self.alert.parentElement.style.visibility = "visible";
 					}
 				});
 				this.saveBtn.style.display = "none";
@@ -123,9 +106,11 @@
 					if (req.readyState == 4) {
 						var message = req.responseText;
 						if (req.status == 200) {
-							var albumsToShow = JSON.parse(req.responseText);
-							self.update(albumsToShow); // call method update of AlbumsList obj
+							var data = JSON.parse(req.responseText);
+							self.update(data); // call method update of AlbumsList obj
 							if (next) next(); // show specific album
+						} else if (req.status == 403){
+							window.location.href = req.getResponseHeader("Location");
 						} else {
 							self.alert.textContent = message;
 							self.alert.parentElement.style.visibility = "visible";
@@ -134,9 +119,9 @@
 				});
 		};
 
-		this.update = function(arraysAlbums) {
-			console.log(arraysAlbums[0]);
-			console.log(arraysAlbums[1]);
+		this.update = function(data) {
+			console.log(data[0]);
+			console.log(data[1]);
 
 			this.albums_containerbody.innerHTML = ""; // empty the table body
 			var self = this;
@@ -144,14 +129,14 @@
 
 			this.albums_containerbody.appendChild(this.createTitle("OTHER ALBUMS"));
 
-			arraysAlbums[0].forEach(function(album) { // show other albums
+			data[0].forEach(function(album) { // show other albums
 				row = self.createItem(album);
 				self.albums_containerbody.appendChild(row);
 			});
 
 			this.albums_containerbody.appendChild(this.createTitle("YOUR ALBUMS"));
 
-			arraysAlbums[1].forEach(function(album) { // show your albums
+			data[1].forEach(function(album) { // show your albums
 				row = self.createItem(album);
 				row.draggable = true;
 				row.classList.add('draggable')
@@ -163,9 +148,12 @@
 			});
 
 			this.albums_containerbody.style.visibility = "visible";
-
+			
+			//show your name
+			this.namecontainer.textContent = "Welcome " + data[2].username;
+			
 			// send your albums to list of checkbox in uploadimage 
-			uploadImage.updateCheckbox(arraysAlbums[1]);
+			uploadImage.updateCheckbox(data[1]);
 		}
 
 		this.createTitle = function(message) {
@@ -238,7 +226,7 @@
 			var e = new Event("click");
 			var selector = "tr[albumid='" + albumId + "']";
 			var rowToClick =  // the first album or the album with id = albumId
-				(albumId) ? document.querySelector(selector) : this.albums_containerbody.querySelectorAll("tr")[1];
+				(albumId) ? document.querySelector(selector) : this.albums_containerbody.querySelectorAll("tr.draggable")[0];
 			if (rowToClick) rowToClick.dispatchEvent(e);
 		}
 	}
@@ -268,6 +256,8 @@
 							self.imagesList = JSON.parse(req.responseText);
 							self.firstIndex = 0;
 							self.update(); // images saved in imagesToShow
+						} else if (req.status == 403){
+							window.location.href = req.getResponseHeader("Location");
 						} else {
 							self.alert.textContent = message;
 							self.alert.parentElement.style.visibility = "visible";
@@ -393,6 +383,8 @@
 						var message = req.responseText;
 						if (req.status == 200) {
 							self.updateComments(JSON.parse(message));
+						} else if (req.status == 403){
+							window.location.href = req.getResponseHeader("Location");
 						} else {
 							self.alert.textContent = message;
 							self.alert.parentElement.style.visibility = "visible";
@@ -442,6 +434,8 @@
 								var message = req.responseText;
 								if (req.status == 200) {
 									self.showComments(self.imageToShow.id);
+								}else if (req.status == 403){
+									window.location.href = req.getResponseHeader("Location");
 								} else {
 									self.alert.textContent = message;
 									self.alert.parentElement.style.visibility = "visible";
@@ -495,11 +489,13 @@
 						function(req) {
 							if (req.readyState == 4) {
 								var message = req.responseText;
-								if (req.status != 200) {
+								if (req.status == 200){
+									orchestrator.refresh(JSON.parse(req.responseText));
+								}else if (req.status == 403){
+									window.location.href = req.getResponseHeader("Location");
+								} else {
 									self.alert.textContent = message;
 									self.alert.parentElement.style.visibility = "visible";
-								}else{
-									orchestrator.refresh(JSON.parse(req.responseText));
 								}
 							}
 						}
@@ -529,11 +525,13 @@
 						function(req) {
 							if (req.readyState == 4) {
 								var message = req.responseText;
-								if (req.status != 200) {
+								if (req.status == 200) {
+									orchestrator.refresh(JSON.parse(req.responseText));
+								}else if (req.status == 403){
+									window.location.href = req.getResponseHeader("Location");
+								} else {
 									self.alert.textContent = message;
 									self.alert.parentElement.style.visibility = "visible";
-								}else{
-									orchestrator.refresh(JSON.parse(req.responseText));
 								}
 							}
 						}

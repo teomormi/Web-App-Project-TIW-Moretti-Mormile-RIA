@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.lang.String;
 
 import javax.servlet.ServletException;
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import it.polimi.tiw.utils.ConnectionHandler;
-import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 
@@ -42,70 +41,51 @@ public class SaveAlbumsOrder extends HttpServlet {
 		HttpSession session = request.getSession();
 		User usr = (User) session.getAttribute("user");	
 		Integer usrId = usr.getId();
-
-		String csvString = request.getParameter("objarray");
 		
-		String[] numberString = csvString.split("\\s*,\\s*");
-		int[] numbers = new int[numberString.length];
+		List<Integer> listIds = new ArrayList<Integer>();
+		AlbumDAO aDao = new AlbumDAO(connection);
 		
-		int index = 0;
-		for(int i = 0;i < numberString.length;i++){
-		    try{
-		        numbers[index] = Integer.parseInt(numberString[i]);
-		        index++;
-		    }catch (Exception e){
-		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("Please insert a valid album id");
-				return;
-		    }
+		try {
+			String[] albumsId = request.getParameter("objarray").split("\\s*,\\s*");
+			
+			// Check that the ids sent are integer, owned by user and not duplicated
+			Set<String> duplicateitems = new HashSet<>();		
+							
+			for (String stringId : albumsId) {
+				Integer id = Integer.parseInt(stringId);
+				listIds.add(id);
+				
+				if(aDao.getAlbumByID(id).getUserId()!=usrId) {
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println("Violated access to album!");
+					return;
+				}
+						
+				if (!duplicateitems.add(stringId)) {
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println(" Duplicate album id");
+					return;
+				}
+			}
+		}catch(Exception ex) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Incorrect or missing param values");
+			return;
 		}
+
 		
-		if (numbers.length == 0) {
+		if (listIds.size() == 0) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Incorrect or missing param values");
 			return;
 		}
 		
-		// Id duplicati
-		Set<String> items = new HashSet<>();
-		Set<String> duplicateItems = Arrays.asList(numberString).stream()
-			 		.filter(id -> !items.add(id)) // Set.add() returns false if the element was already in the set.
-			 		.collect(Collectors.toSet());
-		
-		if(duplicateItems.size( )> 0) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Duplicate album id");
-			return;
-		}
-		
-		AlbumDAO aDao = new AlbumDAO(connection);
-		Album album;
-		
-		// owner album
-		try {
-			
-			for(int i = 0;i < numbers.length;i++){
-		   		album = aDao.getAlbumByID(numbers[i]);
-				if(album.getUserId() != usrId) {
-					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-					response.getWriter().println("Violated access to album");
-					return;
-			    }
-			}
-			
-		} catch (SQLException e) {
-			// id di un album non esistente
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Album value not correct");
-			return;
-		}
-		
-		Integer sorting = 1;
-		
+
+		Integer sorting = 1;		
 		try{
 			connection.setAutoCommit(false);
-			for(int i = 0;i < numbers.length;i++){
-			    aDao.saveOrder(numbers[i], sorting);
+			for(Integer id : listIds){
+			    aDao.saveOrder(id, sorting);
 				sorting++;
 			}
 			connection.commit();

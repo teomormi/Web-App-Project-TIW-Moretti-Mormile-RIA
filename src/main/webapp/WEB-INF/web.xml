@@ -21,11 +21,16 @@
     <param-name>outputpath</param-name>
     <param-value>\photos</param-value>
   </context-param> 
+  
  <filter> 
-      <filter-name>LoggedChecker</filter-name>
-      <filter-class>it.polimi.tiw.filters.LoggedChecker</filter-class> 
+      <filter-name>ServletChecker</filter-name>
+      <filter-class>it.polimi.tiw.filters.ServletChecker</filter-class> 
  </filter> 
-  <filter> 
+ <filter> 
+      <filter-name>HomeChecker</filter-name>
+      <filter-class>it.polimi.tiw.filters.HomeChecker</filter-class> 
+ </filter> 
+ <filter> 
       <filter-name>NotLoggedChecker</filter-name>
       <filter-class>it.polimi.tiw.filters.NotLoggedChecker</filter-class> 
  </filter> 
@@ -35,18 +40,21 @@
  </filter> 
   <filter-mapping> 
     <filter-name>NoCacher</filter-name> 
-    <url-pattern>/index.html</url-pattern> 
     <url-pattern>/home.html</url-pattern> 
+    <url-pattern>/index.html</url-pattern>
  </filter-mapping> 
- <filter-mapping>
+  <filter-mapping>
     <filter-name>NotLoggedChecker</filter-name> 
     <url-pattern>/index.html</url-pattern> 
     <url-pattern>/CreateUser</url-pattern>
     <url-pattern>/CheckLogin</url-pattern> 
- </filter-mapping>
+ </filter-mapping> 
  <filter-mapping>
-    <filter-name>LoggedChecker</filter-name> 
+    <filter-name>HomeChecker</filter-name> 
     <url-pattern>/home.html</url-pattern> 
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>ServletChecker</filter-name> 
     <url-pattern>/GetAlbumsList</url-pattern>
     <url-pattern>/GetImagesList</url-pattern>
     <url-pattern>/GetImage/*</url-pattern>
@@ -55,7 +63,8 @@
 	<url-pattern>/CreateAlbum</url-pattern>
 	<url-pattern>/GetCommentsList</url-pattern>
 	<url-pattern>/SaveAlbumsOrder</url-pattern>
- </filter-mapping> 
+ </filter-mapping>
+ 
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>

@@ -8,11 +8,9 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -95,30 +93,24 @@ public class CreateImage extends HttpServlet {
 				return;
 			}
 			
-			// Check that the ids sent are valid == correspond to album of actual user
+			// Check that the ids sent are integer, owned by user and not duplicated
 			AlbumDAO aDao = new AlbumDAO(connection);
-			
-			for (String s : checkedIds) {
-				Integer id = Integer.parseInt(s);
+			Set<String> duplicateitems = new HashSet<>();		
+					
+			for (String stringId : checkedIds) {
+				Integer id = Integer.parseInt(stringId);
+				listIds.add(id);
 				if(aDao.getAlbumByID(id).getUserId()!=idUser) {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 					response.getWriter().println("Violated access to album!");
 					return;
 				}
-				
-				listIds.add(id);
-			}
-			
-			// Id duplicati
-			Set<String> items = new HashSet<>();
-			Set<String> duplicateItems = Arrays.asList(checkedIds).stream()
-				 		.filter(id -> !items.add(id)) // Set.add() returns false if the element was already in the set.
-				 		.collect(Collectors.toSet());
-			
-			if(duplicateItems.size( )> 0) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println(" Duplicate album id");
-				return;
+					
+				if (!duplicateitems.add(stringId)) {
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println(" Duplicate album id");
+					return;
+				}
 			}
 			
 			if (listIds.size() == 0) {
@@ -198,8 +190,9 @@ public class CreateImage extends HttpServlet {
 		} catch (Exception e) {
 			try {
 					connection.rollback();
-			} catch (SQLException errorSQL) { errorSQL.printStackTrace();}
-			e.printStackTrace();
+					if(file.exists())
+						file.delete();
+			} catch (Exception ex) {ex.printStackTrace();}
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Error while saving file");
 		}		

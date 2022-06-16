@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class LoggedChecker implements Filter{
+public class ServletChecker implements Filter{
 	
 @Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -25,8 +25,10 @@ public class LoggedChecker implements Filter{
 
 		
 		HttpSession s = req.getSession();
-		if(s.isNew() || s.getAttribute("user") == null) {
-			res.sendRedirect(loginpath);
+		if(s.getAttribute("user") == null) {
+			res.setStatus(403);
+			res.setHeader("Location", loginpath);
+			System.out.print("Login checker FAILED...\n");
 			return;
 		}
 		// pass the request along the filter chain

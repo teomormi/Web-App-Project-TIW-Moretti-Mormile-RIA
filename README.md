@@ -1,4 +1,4 @@
-# Web-App-Project-TIW-Moretti-Mormile-RIA
+# Web App Project for TIW Course at Politecnico di Milano - AY 2021-2022
 Final project for the course **"Informatic Technologies for the Web"** at Politecnico di Milano (2021/2022).
 This is the Rich Internet Application (RIA) version that contains also Javascript code on the client side.
 
